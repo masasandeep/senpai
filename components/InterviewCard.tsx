@@ -13,15 +13,6 @@ const InterviewCard = async ({
   createdAt,
 }: InterviewCardProps) => {
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
-  console.log("InterviewCard", {
-    interviewId,
-    userId,
-    role,
-    type,
-    techstack,
-    createdAt,
-    normalizedType,
-  });
   const formattedDate = dayjs(createdAt || Date.now()).format("MMM D, YYYY");
   return (
     <div className="flex-1 sm:basis-1/2 w-full h-[400px]  rounded-2xl p-1 ">

@@ -4,13 +4,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import Link from "next/link";
 import FormField from "./FormField";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { login, signUp } from "@/lib/action/auth.action";
 const authFormSchema = (type: string) => {
   return z.object({
     username: type === "sign-up" ? z.string().min(2) : z.string().optional(),
@@ -29,19 +28,33 @@ const AuthForm = ({ type }: { type: string }) => {
       password: "",
     },
   });
-  const router = useRouter()
+  const router = useRouter();
   const isSignIn = type === "sign-in";
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    try{
-        if(type==='sign-in'){
-            toast.success('Sign in successfull')
-            router.push('/')
-        } else{
-            toast.success('Account Created Successfully')
-            router.push('/signin')
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      if (type === "sign-in") {
+        const { email, password } = values;
+        const resp = await login({ email, password });
+        if (!resp.success) {
+          toast.error(resp.error || "Error occurred during sign in");
+          return;
         }
-    }catch(err){
-        toast.error('Error occured'+err)
+        localStorage.setItem('userId', JSON.stringify(resp.userId))
+        toast.success("Sign in successfull");
+        router.push("/");
+      } else {
+        const { email, username = "", password } = values;
+        const resp = await signUp({ email, username, password });
+        if (!resp.success) {
+          toast.error(resp.error || "Error occurred during sign up");
+          return;
+        }
+        toast.success("Account Created Successfully");
+        router.push("/signin");
+      }
+    } catch (err) {
+      toast.error("Error occured" + err);
+      return 
     }
   };
   return (
@@ -57,14 +70,39 @@ const AuthForm = ({ type }: { type: string }) => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          {!isSignIn && <FormField name="username" placeholder="Enter username" label="username" control={form.control}/>}
-          <FormField name="email" placeholder="Enter email" label="email" control={form.control} type="email"/>
-          <FormField name="password" placeholder="Enter password" label="password" control={form.control} type="password"/>
+          {!isSignIn && (
+            <FormField
+              name="username"
+              placeholder="Enter username"
+              label="username"
+              control={form.control}
+            />
+          )}
+          <FormField
+            name="email"
+            placeholder="Enter email"
+            label="email"
+            control={form.control}
+            type="email"
+          />
+          <FormField
+            name="password"
+            placeholder="Enter password"
+            label="password"
+            control={form.control}
+            type="password"
+          />
           <Button type="submit" className="mt-2 mb-2 rounded-2xl p-6">
             {isSignIn ? "sign in" : "Create an account"}
           </Button>
           <p>
-            {!isSignIn? 'Have an account already ?':'Dont have an account?'}-<Link className="font-bold cursor-pointer" href={!isSignIn? '/signin':'/signup'}>{!isSignIn?'Sign in': 'Sign up'}</Link>
+            {!isSignIn ? "Have an account already ?" : "Dont have an account?"}-
+            <Link
+              className="font-bold cursor-pointer"
+              href={!isSignIn ? "/signin" : "/signup"}
+            >
+              {!isSignIn ? "Sign in" : "Sign up"}
+            </Link>
           </p>
         </form>
       </Form>

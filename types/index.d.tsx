@@ -21,3 +21,8 @@ interface InterviewCardProps {
 interface TechStackProps {
   techstack: string[];
 }
+interface AuthProps{
+  email: string;
+  username?: string;
+  password: string;
+}
