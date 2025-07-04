@@ -3,10 +3,19 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import {Interview} from "@/app/models/interviewModel";
 import { getRandomInterviewCover } from "@/lib/utils";
+import mongoose from "mongoose";
+interface InterviewRequestBody {
+  techstack: string;
+  amount: number;
+  level: string;
+  role: string;
+  userid: string; 
+  type: string;
+}
 export async function POST(request: NextRequest) {
   try {
     const { techstack, amount, level, role, userid, type } =
-      await request.json();
+      (await request.json() as InterviewRequestBody);
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
       prompt: `Prepare questions for a job interview.
@@ -28,7 +37,7 @@ export async function POST(request: NextRequest) {
       level: level,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
-      userId: userid,
+      userId: new mongoose.Types.ObjectId(userid),
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
@@ -39,7 +48,7 @@ export async function POST(request: NextRequest) {
     console.error("Error:", err);
     return NextResponse.json(
       {
-        success: true,
+        success: false,
         error: err.message,
       },
       { status: 500 }

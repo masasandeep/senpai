@@ -8,6 +8,7 @@ interface InterView {
   userId: string;
   type: string;
   finalized: boolean;
+  amount?:string
 }
 
 interface InterviewCardProps {
