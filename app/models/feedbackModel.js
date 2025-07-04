@@ -39,21 +39,21 @@ const feedbackSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  categoryScores: {
-    type: [categoryScoreSchema],
+  categoryScores: [{
+    type: categoryScoreSchema,
     validate: [
       (val) => val.length === 5,
       "Exactly 5 category scores are required.",
     ],
-  },
-  strengths: {
-    type: [String],
+  }],
+  strengths: [{
+    type: String,
     required: true,
-  },
-  areasForImprovement: {
-    type: [String],
+  }],
+  areasForImprovement: [{
+    type: String,
     required: true,
-  },
+  }],
   finalAssessment: {
     type: String,
     required: true,

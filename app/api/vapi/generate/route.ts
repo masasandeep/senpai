@@ -4,6 +4,7 @@ import { google } from "@ai-sdk/google";
 import {Interview} from "@/app/models/interviewModel";
 import { getRandomInterviewCover } from "@/lib/utils";
 import mongoose from "mongoose";
+import { connect } from "@/dbConfig/dbConfig";
 interface InterviewRequestBody {
   techstack: string;
   amount: number;
@@ -12,6 +13,7 @@ interface InterviewRequestBody {
   userid: string; 
   type: string;
 }
+connect()
 export async function POST(request: NextRequest) {
   try {
     const { techstack, amount, level, role, userid, type } =
@@ -35,6 +37,7 @@ export async function POST(request: NextRequest) {
     const interview = new Interview({
       role: role,
       level: level,
+      type: type,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
       userId: new mongoose.Types.ObjectId(userid),
@@ -45,7 +48,7 @@ export async function POST(request: NextRequest) {
     const savedInterview = await interview.save();
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err: any) {
-    console.error("Error:", err);
+    console.log("Error:", err);
     return NextResponse.json(
       {
         success: false,

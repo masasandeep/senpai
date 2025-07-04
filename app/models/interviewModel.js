@@ -13,17 +13,18 @@ const interviewSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  techstack: {
-    type: [String],
+  techstack: [{
+    type: String,
     required: true,
-  },
-  questions: {
-    type: [String],
+  }],
+  questions: [{
+    type: String,
     required: true,
-  },
+  }],
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true
   },
   finalized: {
     type: Boolean,
