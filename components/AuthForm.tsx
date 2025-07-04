@@ -39,7 +39,6 @@ const AuthForm = ({ type }: { type: string }) => {
           toast.error(resp.error || "Error occurred during sign in");
           return;
         }
-        localStorage.setItem('userId', JSON.stringify(resp.userId))
         toast.success("Sign in successfull");
         router.push("/");
       } else {

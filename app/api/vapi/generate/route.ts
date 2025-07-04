@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import Interview from "@/app/models/interviewModel";
+import {Interview} from "@/app/models/interviewModel";
 import { getRandomInterviewCover } from "@/lib/utils";
 export async function POST(request: NextRequest) {
   try {

@@ -1,11 +1,15 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
 import { dummyInterviews } from "@/constants";
+import { getCurrentUser} from "@/lib/action/auth.action";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const page = () => {
+const page = async() => {
+  const user = await getCurrentUser()
+  if(!user) redirect("signin")
   return (
     <>
       <div className="flex blue-gradient-dark px-4 py-6 rounded-3xl items-center justify-between">

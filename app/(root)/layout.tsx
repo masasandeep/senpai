@@ -1,8 +1,16 @@
+import { isAuthenticated } from "@/lib/action/auth.action";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 
-const RootLayout = ({ children }: { children: ReactNode }) => {
+const RootLayout = async({ children }: { children: ReactNode }) => {
+    const isUserAuthenticated = await isAuthenticated();
+  if (!isUserAuthenticated) redirect("/signin");
+
   return (
+   
+
+  
     <div className="flex mx-auto max-w-7xl flex-col gap-12 my-12 px-2 max-sm:px-4 max-sm:my-8">
       <nav className="flex justify-between items-center">
         <Link href="/" className="flex items-center text-2xl gap-2">
@@ -11,8 +19,11 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         </Link>
         <img src="profile.svg" className="h-9 w-9 rounded-full" />
       </nav>
+       
       {children}
+      
     </div>
+      
   );
 };
 
