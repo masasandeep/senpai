@@ -1,9 +1,10 @@
 "use server";
 import User from "@/app/models/userModels";
+import { connect } from "@/dbConfig/dbConfig";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-
+connect()
 const SESSION_DURATION = 60 * 60 * 24;
 export async function setCookie(userId: string) {
   const cookieStore = await cookies();

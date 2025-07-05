@@ -4,15 +4,13 @@ import { getCurrentUser } from "@/lib/action/auth.action";
 import { getFeedbackByInterviewId, getInteriewById } from "@/lib/action/interview.action";
 import { getRandomInterviewCover } from "@/lib/utils";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 
 const page = async({params}:{params:{id:string}}) => {
-  const {id} = params
+  const {id} =await  params
     const user = await getCurrentUser()
-    if(!user) redirect('/signin')
+
       const interview = await getInteriewById(id)
-    if(!interview) redirect('/')
-      const feedback = await getFeedbackByInterviewId(id,user.id)
+      const feedback = await getFeedbackByInterviewId(id,user?.id!)
   return (
    <>
       <div className="flex flex-row gap-4 justify-between">
@@ -25,23 +23,23 @@ const page = async({params}:{params:{id:string}}) => {
               height={40}
               className="rounded-full object-cover size-[40px]"
             />
-            <h3 className="capitalize">{interview.role} Interview</h3>
+            <h3 className="capitalize">{interview?.role} Interview</h3>
           </div>
 
-          <DisplayTechIcons techstack={interview.techstack} />
+          <DisplayTechIcons techstack={interview?.techstack!} />
         </div>
 
         <p className="bg-dark-200 px-4 py-2 rounded-lg h-fit">
-          {interview.type}
+          {interview?.type}
         </p>
       </div>
 
       <Agent
         username={user?.username!}
-        userId={user?.id}
+        userId={user?.id!}
         interviewId={id}
         type="interview"
-        questions={interview.questions}
+        questions={interview?.questions}
         feedbackId={feedback?.id}
       />
     </>

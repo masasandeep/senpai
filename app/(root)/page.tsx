@@ -1,15 +1,15 @@
 import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
-import { dummyInterviews } from "@/constants";
 import { getCurrentUser} from "@/lib/action/auth.action";
+import { getInterviewByUserId } from "@/lib/action/interview.action";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
 
 const page = async() => {
   const user = await getCurrentUser()
-  if(!user) redirect("signin")
+  const currentInterview = await getInterviewByUserId(user?.id!)
+  const hasInterviews = currentInterview?.length!>0
   return (
     <>
       <div className="flex blue-gradient-dark px-4 py-6 rounded-3xl items-center justify-between">
@@ -31,11 +31,24 @@ const page = async() => {
           className="max-sm:hidden"
         />
       </div>
-      <p className="text-lg">Your Past Interviews</p>
+      <p className="text-lg">Your Interviews</p>
       <div className="flex gap-6 px-2">
-        {dummyInterviews.map((interview) => (
-          <InterviewCard {...interview} key={interview.id} />
-        ))}
+        {hasInterviews ? (
+            currentInterview?.map((interview) => (
+              <InterviewCard
+                key={interview.id}
+                userId={user?.id}
+                interviewId={interview.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
+            ))
+          ) : (
+            <p>You haven&apos;t taken any interviews yet</p>
+          )}
+        
       </div>
     </>
   );

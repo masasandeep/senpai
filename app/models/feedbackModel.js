@@ -9,8 +9,8 @@ const categoryScoreSchema = new mongoose.Schema(
         "Communication Skills",
         "Technical Knowledge",
         "Problem Solving",
-        "Cultural & Role Fit",
-        "Confidence & Clarity",
+        "Cultural Fit",
+        "Confidence and Clarity",
       ],
     },
     score: {

@@ -86,7 +86,12 @@ const Agent = ({
       }
     };
     if (callStatus === CallStatus.FINISHED) {
-      handleGenerateFeedback(messages);
+      if(type === "generate"){
+        router.push("/");
+      }else{
+        handleGenerateFeedback(messages);
+      }
+      
     }
   }, [messages, callStatus, router]);
   const handleCall = async () => {

@@ -4,11 +4,10 @@ interface InterView {
   level: string;
   questions: string[];
   techstack: string[];
-  createdAt: string;
+  createdAt?: string;
   userId: string;
   type: string;
   finalized: boolean;
-  amount?:string
 }
 
 interface InterviewCardProps {

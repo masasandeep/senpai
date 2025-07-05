@@ -4,12 +4,24 @@ import { feedbackSchema } from "@/constants";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { Feedback } from "@/app/models/feedbackModel";
-
-export const getInteriewById = async (id: string) => {
+import { connect } from "@/dbConfig/dbConfig";
+connect()
+export const getInteriewById = async (id: string):Promise<InterView|null> => {
   try {
-    const resp = await Interview.findById({ id });
+    const resp = await Interview.findById(id );
     if (!resp) return null;
-    return { ...resp } as InterView;
+    const interviewData = { 
+      id: resp._id.toString(),
+      questions: resp.questions,
+      techstack: resp.techstack,
+      userId: resp.userId,
+      type: resp.role,
+      finalized: resp.finalized,
+  role: resp.role,
+  level: resp.level
+  
+     } 
+    return interviewData
   } catch (err) {
     console.log(err);
     return null;
@@ -45,15 +57,14 @@ export const createFeedback = async (params: CreateFeedback) => {
       system:
         "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
     });
-    const parsedData = feedbackSchema.parse(object);
     const newFeedback = new Feedback({
       interviewId: interviewId,
       userId: userId,
-      categoryScores: parsedData.categoryScores,
-      totalScores: parsedData.totalScore,
-      strengths: parsedData.strengths,
-      areasForImprovement: parsedData.areasForImprovement,
-      finalAssessment: parsedData.finalAssessment,
+      categoryScores: object.categoryScores,
+      totalScore: object.totalScore,
+      strengths: object.strengths,
+      areasForImprovement: object.areasForImprovement,
+      finalAssessment: object.finalAssessment,
       createdAt: new Date().toISOString(),
     });
     if (feedbackId) {
@@ -89,8 +100,8 @@ export const getFeedbackByInterviewId = async (
   userId: string
 ):Promise<FeedbackStructure|null> => {
   try {
-    const feedback = await Feedback.findById({
-      $all: [interviewId, userId],
+    const feedback = await Feedback.findOne({
+      interviewId, userId
     });
     if (!feedback) return null;
     return {
@@ -109,3 +120,25 @@ export const getFeedbackByInterviewId = async (
     return null;
   }
 };
+
+export const getInterviewByUserId  =async(id:string):Promise<InterView[]|null>=>{
+  try{
+    const interviews = await Interview.find({userId: id})
+    if(!interviews||interviews.length ==0) return null
+    const interviewsData = interviews.map((doc)=>({
+      id: doc._id.toString(),
+      role: doc.role,
+    level: doc.level,
+    questions: doc.questions,
+    techstack: doc.techstack,
+    createdAt: doc.createdAt.toISOString(),
+    userId: doc.userId.toString(),
+    type: doc.type,
+    finalized: doc.finalized,
+    }))
+    return interviewsData
+  }catch(err:any){
+    console.log(err)
+    return null
+  }
+}
