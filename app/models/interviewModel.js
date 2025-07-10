@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { boolean, object } from "zod";
 const interviewSchema = new mongoose.Schema({
   role: {
     type: String,

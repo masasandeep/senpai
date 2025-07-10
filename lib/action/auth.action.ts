@@ -70,14 +70,8 @@ export async function logOut() {
   try {
     const cookieStore = await cookies();
     cookieStore.delete("token");
-    return {
-      success: true,
-    };
   } catch (err: any) {
-    return {
-      success: false,
-      error: err.message,
-    };
+    console.log(err);
   }
 }
 export async function getCurrentUser(): Promise<AllUser | null> {

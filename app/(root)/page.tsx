@@ -32,7 +32,7 @@ const page = async() => {
         />
       </div>
       <p className="text-lg">Your Interviews</p>
-      <div className="flex gap-6 px-2">
+      <div className="flex flex-1 min-w-[240px] flex-wrap gap-6 px-2">
         {hasInterviews ? (
             currentInterview?.map((interview) => (
               <InterviewCard

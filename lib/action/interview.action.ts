@@ -85,7 +85,7 @@ export const createFeedback = async (params: CreateFeedback) => {
       await newFeedback!.save();
       return {
         sucess: true,
-        id: newFeedback._id,
+        id: newFeedback._id.toString(),
       };
     }
   } catch (err) {
