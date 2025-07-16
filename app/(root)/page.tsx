@@ -32,24 +32,25 @@ const page = async() => {
         />
       </div>
       <p className="text-lg">Your Interviews</p>
-      <div className="flex flex-1 min-w-[240px] flex-wrap gap-6 px-2">
-        {hasInterviews ? (
-            currentInterview?.map((interview) => (
-              <InterviewCard
-                key={interview.id}
-                userId={user?.id}
-                interviewId={interview.id}
-                role={interview.role}
-                type={interview.type}
-                techstack={interview.techstack}
-                createdAt={interview.createdAt}
-              />
-            ))
-          ) : (
-            <p>You haven&apos;t taken any interviews yet</p>
-          )}
-        
+      <div className="flex flex-col md:flex-row flex-wrap gap-3 px-2">
+  {hasInterviews ? (
+    currentInterview?.map((interview) => (
+      <div key={interview.id} className="w-full md:w-1/3">
+        <InterviewCard
+          userId={user?.id}
+          interviewId={interview.id}
+          role={interview.role}
+          type={interview.type}
+          techstack={interview.techstack}
+          createdAt={interview.createdAt}
+        />
       </div>
+    ))
+  ) : (
+    <p>You haven&apos;t taken any interviews yet</p>
+  )}
+</div>
+
     </>
   );
 };
