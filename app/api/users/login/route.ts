@@ -1,7 +1,6 @@
 import User from "@/app/models/userModels";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { connect } from "@/dbConfig/dbConfig";
 connect()
 export async function POST(request: NextRequest) {
@@ -20,6 +19,13 @@ export async function POST(request: NextRequest) {
       userId: user._id,
       username: user.username,
       message: "Login successful",
+    });
+    response.cookies.set("userId", String(user._id), {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 *2,
     });
     return response
   } catch (error: any) {

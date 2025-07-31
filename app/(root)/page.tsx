@@ -32,10 +32,10 @@ const page = async() => {
         />
       </div>
       <p className="text-lg">Your Interviews</p>
-      <div className="flex flex-col md:flex-row flex-wrap gap-3 px-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 w-full">
   {hasInterviews ? (
     currentInterview?.map((interview) => (
-      <div key={interview.id} className="w-full md:w-1/3">
+
         <InterviewCard
           userId={user?.id}
           interviewId={interview.id}
@@ -44,7 +44,6 @@ const page = async() => {
           techstack={interview.techstack}
           createdAt={interview.createdAt}
         />
-      </div>
     ))
   ) : (
     <p>You haven&apos;t taken any interviews yet</p>

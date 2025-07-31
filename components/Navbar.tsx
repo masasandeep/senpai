@@ -24,9 +24,9 @@ const Navbar = () => {
         <DropdownMenuTrigger>
           <Image
             src='/luffycover.jpg'
-            className="rounded-full flex items-center text-4xl gap-2"
-            width={40}
-            height={40}
+            className="rounded-full flex items-center"
+            width={50}
+            height={60}
             alt="profile"
           />
         </DropdownMenuTrigger>

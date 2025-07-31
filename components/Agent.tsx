@@ -86,23 +86,26 @@ const Agent = ({
       }
     };
     if (callStatus === CallStatus.FINISHED) {
-      if(type === "generate"){
+      if (type === "generate") {
         router.push("/");
-      }else{
+      } else {
         handleGenerateFeedback(messages);
       }
-      
     }
   }, [messages, callStatus, router]);
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
     if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: username,
-          userid: userId,
-        },
-      });
+      try {
+        await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+         variableValues:{
+          "username": username,
+          "userid": userId
+         }
+        });
+      } catch (error) {
+        console.error("Error starting Vapi workflow:", error);
+      }
     } else {
       let formattedQuestions = "";
       if (questions) {
@@ -147,7 +150,7 @@ const Agent = ({
               className="object-cover z-10"
             />
           </div>
-          <h3 className="font-semibold text-center">AI Interviewer</h3>
+          <h3 className="font-semibold text-center">username</h3>
         </div>
       </div>
       {messages.length > 0 && (

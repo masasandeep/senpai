@@ -5,18 +5,19 @@ import {Interview} from "@/app/models/interviewModel";
 import { getRandomInterviewCover } from "@/lib/utils";
 import mongoose from "mongoose";
 import { connect } from "@/dbConfig/dbConfig";
+import { getCurrentUser } from "@/lib/action/auth.action";
 interface InterviewRequestBody {
   techstack: string;
   amount: number;
   level: string;
   role: string;
-  userid: string; 
   type: string;
 }
 connect()
 export async function POST(request: NextRequest) {
+  const userId = request.cookies.get("userId")?.value;
   try {
-    const { techstack, amount, level, role, userid, type } =
+    const { techstack, amount, level, role, type } =
       (await request.json() as InterviewRequestBody);
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
@@ -34,13 +35,14 @@ export async function POST(request: NextRequest) {
         Thank you! <3
     `,
     });
+    console.log(userId);
     const interview = new Interview({
       role: role,
       level: level,
       type: type,
       techstack: techstack.split(","),
       questions: JSON.parse(questions),
-      userId: new mongoose.Types.ObjectId(userid),
+      userId: new mongoose.Types.ObjectId(userId),
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
